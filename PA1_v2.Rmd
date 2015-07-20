@@ -1,13 +1,24 @@
-# Coursera - 4 - Reproducible Research
-# Peer Assessment 1
-# Submitter:  A. Nichols
-# 19 July 2015
+### Coursera - 4 - Reproducible Research
+### Peer Assessment 1
 
-library(dplyr); library(lubridate); library(tidyr); library(lattice) 
-library(ggplot2)
+Submitter:  A. Nichols
+
+19 July 2015
+
+The code described below will read-in physical fitness data (i.e., the "activity.csv" file, provided) and produce the histogram and time series plots shown below.
+
+The first step is to load the "dplyr" and "lubridate" packages for R, as shown below, and to read in the physical fitness data from a .csv file.  The file includes a header row with the names for three columns ("steps", "date", and "interval"), followed by 17568 rows of fitness data.  
+
+The fitness data described the number of steps a person took each day (in 5-minute increments) during a 53-day period from October 1, 2012, to November 30, 2012.  The data had to be cleaned up and consolidated to make the figures provided below.
+
+
+
+```{r}
+library(dplyr)
+library(lubridate)
 
 data1df <- read.table(
-	"C:/Users/.../activity.csv",
+	"C:/Users/Andrew/Documents/Coursera/Data_Science_JHU/5_-_Rep_Res/pa1/activity.csv",
 	header=TRUE,
 	sep = ",",
 	col.names = c("steps", "date", "interval"),
@@ -15,30 +26,33 @@ data1df <- read.table(
 	na.strings=c("NA")
 )
 data1df$date <- strptime(data1df$date, format="%Y-%m-%d")
-data1df$date <- ymd(data1df$date)	# Use lubridate to fix date format
+data1df$date <- ymd(data1df$date)	# Use lubridate to ensure correct date format
 data1tbl <- tbl_df(data1df) 		# Create tbl out of initial data frame
 data2tbl <- mutate(data1tbl, 
 	new_steps=steps,
 	day_num=wday(date), 
 	day=weekdays(date))
 data2df <- data.frame(data2tbl)
-data3df <- cbind(data2df, "weekday"=0)  # Identify weekdays & weekend days
-	for (i in 1:17568) {
-		if ((data3df$day_num[i] >= 2)&(data3df$day_num[i] <= 6)){
-			data3df$weekday[i] <- 1
-		}
-	}
-	for (i in 1:17568) {
-		if (is.na(data3df$steps[i])){
-			data3df$new_steps[i] <- 0
-		}
-	}
+data3df <- cbind(data2df, "weekday"=0)
+
+data3df$weekday[(data3df$day_num >= 2) & (data3df$day_num <= 6)]<- 1	
+
 data3tbl <- tbl_df(data3df)
 data3tbl <- select(data3tbl, date, interval, day, day_num, weekday,
 	steps, new_steps)
 data4df <- data.frame(data3tbl)  	# Baseline data sets
 data4tbl <- data3tbl
+```
 
+
+
+The histogram shown here describes the total number of steps a person took each day during a 53-day period from October 1, 2012, through November 30, 2012.  The histogram bins the daily counts and shows the frequency with which a person took a given number of steps.
+
+Strategy for missing data:  In the original data set, some values for "steps" were missing, and coded as "NA" (not available).  In this analysis, the NA step values have been removed (ommitted).  You can see this happening in the five filter statements in the code that include "!is.na(steps)".  The histogram shown below shows the total number of steps taken each day after missing values were imputed (i.e., removed).
+
+
+
+```{r}
 # Histogram 1 (NA's Omitted)##################################
 data5tbl <- select(data4tbl, date, steps)
 data5tbl <- filter(data5tbl, !is.na(steps))
@@ -54,9 +68,33 @@ hist(by_date_sums$steps,
 	ylab="Frequency of Occurence Over 53 Days",
 	ylim=c(0, 30)
 )
-dev.copy(png, file="H1.png",width=480, height=480, bg="White")
-dev.off()
+```
 
+
+
+A call to summary(by_date_sums) reveals the maximum and minimum number of steps the person took per day (Note: NA values have been omitted), along with the mean and median values for the 53-day period.
+
+Mean:       10766  steps per day
+
+Median:     10765  steps per day
+
+Maximum:    21194  steps per day
+
+Minimum:       41  steps per day
+
+
+
+```{r, echo=TRUE}
+summary(by_date_sums)
+```
+
+
+
+Here is a time series plot of the AVERAGE number of steps taken per 5-minute interval during the day (the average level per similar interval across all 53 days).  The intervals are shown on a 24-hour clock basis (0000 to 2400 hours).  (Each 24-hour day includes 288 5-minute intervals.)
+
+
+
+```{r}
 # Time Series 1 (Average Steps per Day ################################
 data10tbl <- select(data4tbl, interval, steps)
 data10tbl <- filter(data10tbl, !is.na(steps))
@@ -84,8 +122,25 @@ legend("topright",
 	lty=1,
 	cex=0.7
 )
-dev.copy(png, file="TS1.png",width=480, height=480, bg="White")
-dev.off()
+```
+
+
+
+On average, the maximum number of steps taken in a particular day was 206.17, and it occurred during interval 835 (i.e., at 8:35 a.m.), as shown by the following code.
+
+
+
+```{r}
+summary(by_interval)
+max1 <- tbl_df(by_interval)
+filter(max1, steps>206)
+```
+
+
+Here is a time series plot of the MEDIAN number of steps taken per 5-minute interval during the day (the median level per similar interval across all 53 days).  The intervals are shown on a 24-hour clock basis (0000 to 2400 hours).  (Each 24-hour day includes 288 5-minute intervals.)
+
+
+```{r}
 
 # Time Series 2 (Median Steps per Day) ###############################
 data20tbl <- select(data4tbl, interval, steps)
@@ -114,9 +169,17 @@ legend("topright",
 	lty=1,
 	cex=0.7
 )
-dev.copy(png, file="TS2.png",width=480, height=480, bg="White")
-dev.off()
+```
 
+
+
+
+The two time-series plots shown below show the average number of steps taken per 5-minute interval for weekdays (the first plot), and for weekend days (the second plot).  (The two plots are not in the same panel, per se, but are on the same scale and are positioned similarly.)
+
+
+
+
+```{r}
 # Weekday Average #################################################
 data30tbl <- select(data4tbl, interval, steps, weekday)
 data30tbl <- filter(data30tbl, weekday==1, !is.na(steps))
@@ -144,8 +207,6 @@ legend("topright",
 	lty=1,
 	cex=0.7
 )
-dev.copy(png, file="WD1.png",width=480, height=480, bg="White")
-dev.off()
 
 # Weekend Daily Avg ##############################################
 data40tbl <- select(data4tbl, interval, steps, weekday)
@@ -174,8 +235,8 @@ legend("topright",
 	lty=1,
 	cex=0.7
 )
-dev.copy(png, file="WE1.png",width=480, height=480, bg="White")
-dev.off()
+
+```
 
 
 
