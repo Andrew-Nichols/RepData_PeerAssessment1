@@ -1,3 +1,6 @@
+---
+output: html_document
+---
 ### Coursera - 4 - Reproducible Research
 ### Peer Assessment 1
 
@@ -59,7 +62,9 @@ data5tbl <- filter(data5tbl, !is.na(steps))
 data5df <- data.frame(data5tbl)
 data5df$date <- as.character(data5df$date)
 by_date_sums <- aggregate(steps ~ date, data=data5df, FUN=sum)
+```
 
+```{r}
 hist(by_date_sums$steps, 
 	col="Red",
 	bg="White",
@@ -100,7 +105,9 @@ data10tbl <- select(data4tbl, interval, steps)
 data10tbl <- filter(data10tbl, !is.na(steps))
 data10df <- data.frame(data10tbl)
 by_interval <- aggregate(steps ~ interval, data=data10df, FUN=mean)
+```
 
+```{r}
 with(by_interval, plot(interval, steps, type="n",
 	main="Average Steps per 5-Minute Interval",
 	sub="(Data at 5-minute intervals with NA values omitted)", 
@@ -130,7 +137,7 @@ On average, the maximum number of steps taken in a particular day was 206.17, an
 
 
 
-```{r}
+```{r, echo=TRUE}
 summary(by_interval)
 max1 <- tbl_df(by_interval)
 filter(max1, steps>206)
@@ -147,7 +154,9 @@ data20tbl <- select(data4tbl, interval, steps)
 data20tbl <- filter(data20tbl, !is.na(steps))
 data20df <- data.frame(data20tbl)
 by_interval2 <- aggregate(steps ~ interval, data=data20df, FUN=median)
+```
 
+```{r}
 with(by_interval2, plot(interval, steps, type="n",
 	main="Median Steps per 5-Minute Interval",
 	sub="(Data at 5-minute intervals with NA values omitted)", 
@@ -185,7 +194,9 @@ data30tbl <- select(data4tbl, interval, steps, weekday)
 data30tbl <- filter(data30tbl, weekday==1, !is.na(steps))
 data30df <- data.frame(data30tbl)
 by_interval <- aggregate(steps ~ interval, data=data30df, FUN=mean)
+```
 
+```{r}
 with(by_interval, plot(interval, steps, type="n",
 	main="Weekday Average Steps per 5-Minute Interval",
 	sub="(Data at 5-minute intervals with NA values omitted)", 
@@ -207,13 +218,17 @@ legend("topright",
 	lty=1,
 	cex=0.7
 )
+```
 
+```{r}
 # Weekend Daily Avg ##############################################
 data40tbl <- select(data4tbl, interval, steps, weekday)
 data40tbl <- filter(data40tbl, weekday==0, !is.na(steps))
 data40df <- data.frame(data40tbl)
 by_interval3 <- aggregate(steps ~ interval, data=data40df, FUN=mean)
+```
 
+```{r}
 with(by_interval3, plot(interval, steps, type="n",
 	main="Weekend Daily Average Steps per 5-Minute Interval",
 	sub="(Data at 5-minute intervals with NA values omitted)", 

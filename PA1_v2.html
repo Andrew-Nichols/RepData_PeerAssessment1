@@ -117,9 +117,8 @@ data5tbl &lt;- select(data4tbl, date, steps)
 data5tbl &lt;- filter(data5tbl, !is.na(steps))
 data5df &lt;- data.frame(data5tbl)
 data5df$date &lt;- as.character(data5df$date)
-by_date_sums &lt;- aggregate(steps ~ date, data=data5df, FUN=sum)
-
-hist(by_date_sums$steps, 
+by_date_sums &lt;- aggregate(steps ~ date, data=data5df, FUN=sum)</code></pre>
+<pre class="r"><code>hist(by_date_sums$steps, 
     col=&quot;Red&quot;,
     bg=&quot;White&quot;,
     main=&quot;Steps per Day (NA's Omitted)&quot;,
@@ -146,9 +145,8 @@ hist(by_date_sums$steps,
 data10tbl &lt;- select(data4tbl, interval, steps)
 data10tbl &lt;- filter(data10tbl, !is.na(steps))
 data10df &lt;- data.frame(data10tbl)
-by_interval &lt;- aggregate(steps ~ interval, data=data10df, FUN=mean)
-
-with(by_interval, plot(interval, steps, type=&quot;n&quot;,
+by_interval &lt;- aggregate(steps ~ interval, data=data10df, FUN=mean)</code></pre>
+<pre class="r"><code>with(by_interval, plot(interval, steps, type=&quot;n&quot;,
     main=&quot;Average Steps per 5-Minute Interval&quot;,
     sub=&quot;(Data at 5-minute intervals with NA values omitted)&quot;, 
     xlab=&quot;Hour of Day&quot;,
@@ -190,9 +188,8 @@ filter(max1, steps&gt;206)</code></pre>
 data20tbl &lt;- select(data4tbl, interval, steps)
 data20tbl &lt;- filter(data20tbl, !is.na(steps))
 data20df &lt;- data.frame(data20tbl)
-by_interval2 &lt;- aggregate(steps ~ interval, data=data20df, FUN=median)
-
-with(by_interval2, plot(interval, steps, type=&quot;n&quot;,
+by_interval2 &lt;- aggregate(steps ~ interval, data=data20df, FUN=median)</code></pre>
+<pre class="r"><code>with(by_interval2, plot(interval, steps, type=&quot;n&quot;,
     main=&quot;Median Steps per 5-Minute Interval&quot;,
     sub=&quot;(Data at 5-minute intervals with NA values omitted)&quot;, 
     xlab=&quot;Hour of Day&quot;,
@@ -219,9 +216,8 @@ legend(&quot;topright&quot;,
 data30tbl &lt;- select(data4tbl, interval, steps, weekday)
 data30tbl &lt;- filter(data30tbl, weekday==1, !is.na(steps))
 data30df &lt;- data.frame(data30tbl)
-by_interval &lt;- aggregate(steps ~ interval, data=data30df, FUN=mean)
-
-with(by_interval, plot(interval, steps, type=&quot;n&quot;,
+by_interval &lt;- aggregate(steps ~ interval, data=data30df, FUN=mean)</code></pre>
+<pre class="r"><code>with(by_interval, plot(interval, steps, type=&quot;n&quot;,
     main=&quot;Weekday Average Steps per 5-Minute Interval&quot;,
     sub=&quot;(Data at 5-minute intervals with NA values omitted)&quot;, 
     xlab=&quot;Hour of Day&quot;,
@@ -247,9 +243,8 @@ legend(&quot;topright&quot;,
 data40tbl &lt;- select(data4tbl, interval, steps, weekday)
 data40tbl &lt;- filter(data40tbl, weekday==0, !is.na(steps))
 data40df &lt;- data.frame(data40tbl)
-by_interval3 &lt;- aggregate(steps ~ interval, data=data40df, FUN=mean)
-
-with(by_interval3, plot(interval, steps, type=&quot;n&quot;,
+by_interval3 &lt;- aggregate(steps ~ interval, data=data40df, FUN=mean)</code></pre>
+<pre class="r"><code>with(by_interval3, plot(interval, steps, type=&quot;n&quot;,
     main=&quot;Weekend Daily Average Steps per 5-Minute Interval&quot;,
     sub=&quot;(Data at 5-minute intervals with NA values omitted)&quot;, 
     xlab=&quot;Hour of Day&quot;,
