@@ -254,4 +254,41 @@ legend("topright",
 ```
 
 
+Adding xypanel plot for number of steps on weekdays and weekend days (this combines the previous two graphics).
+
+
+```{r}
+# To create panel plot, use existing tbl's for weekday steps
+# and weekend steps.  Combine these in one data frame with
+# intervals, then call lattice's xyplot to create the panel
+
+library(lattice)					# Get weekday step data
+by_interval_weekday <- by_interval		# Prep to add weekend steps
+wddf <- data.frame(by_interval_weekday)	
+names(wddf)[names(wddf)=="steps"] <- "wd_steps"	# Add placeholder col.
+wddf <- cbind(wddf, "we_steps"=0)
+
+by_interval_weekend <- by_interval3		# Get weekend step data
+wedf <- data.frame(by_interval_weekend)	
+wddf$we_steps <- wedf$steps			# Add weekend steps to df
+combdf <- wddf					# Rename df for clarity
+
+xyplot(wd_steps + we_steps ~ interval, 
+	data=combdf,
+	type="l",
+	lwd="2",
+	col=c("Blue", "Red"),
+	auto.key=T,
+	xlab="Time of Day (24-Hr. Clock)", 
+	ylab="Avg. Weekday Steps (Blue), Avg. Weekend Steps (Red)", 
+	xlim=c(0, 2400),
+	ylim=c(0, 250),
+	scales=list(x=list(at=seq(0, 2400, 300)),
+		y=list(at=seq(0, 250, 25))),
+    	main="Average Steps per Interval, by Day Type (Weekday, Weekend)",
+	sub=""
+)
+
+```
+
 
