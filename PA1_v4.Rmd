@@ -1,8 +1,11 @@
+
 ---
-output: html_document
+title: "Peer Assessment 1"
+output:
+  html_document:
+    keep_md: true
 ---
 ### Coursera - 4 - Reproducible Research
-### Peer Assessment 1
 
 Submitter:  A. Nichols
 
@@ -70,7 +73,7 @@ hist(by_date_sums$steps,
 	bg="White",
 	main="Steps per Day (NA's Omitted)",
 	xlab="Total Steps per Day",
-	ylab="Frequency of Occurence Over 53 Days",
+	ylab="Frequency of Occurrence Over 53 Days",
 	ylim=c(0, 30)
 )
 ```
@@ -292,3 +295,30 @@ xyplot(wd_steps + we_steps ~ interval,
 ```
 
 
+
+For good measure, here is a new 2-panel plot in the "over/under" format requested.
+
+```{r}
+
+data40df <- data4df
+data40df$weekday[(data40df$day_num >= 2) & (data40df$day_num <= 6)]<- c("Weekday")
+data40df$weekday[(data40df$day_num == 1) | (data40df$day_num == 7)]<- c("Weekend")  
+
+steps_by_daytype <- aggregate(new_steps ~ interval + weekday, data = data40df, mean)
+names(steps_by_daytype) <- c("interval", "weekday", "steps")
+
+xyplot(steps ~ interval | weekday, 
+	data=steps_by_daytype, 
+	type = "l", 
+	lwd="2",
+	col=c("Blue"),
+	layout = c(1, 2), 
+	xlab="Time of Day (24-Hr. Clock)", 
+	ylab = "Average Number of Steps per 5-Minute Interval",
+	scales=list(x=list(at=seq(0, 2400, 300)),
+		y=list(at=seq(0, 250, 25))),
+	main="Average Steps per Interval During the Day, by Day Type"
+)
+
+
+```
